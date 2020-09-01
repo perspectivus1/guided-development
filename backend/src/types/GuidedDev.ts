@@ -1,6 +1,7 @@
 export interface IGuidedDevContribution {
     getCollections: () => Array<ICollection>;
     getItems: () => Array<IItem>;
+    registerOnChangedCallback: (thisArg: Object, callback: (extensionId: string) => void) => void;
 }
 
 export interface ICollection {

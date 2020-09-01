@@ -18,7 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
 		return;
 	}
 
-	Contributors.getContributors().init();
+	Contributors.getInstance().init();
 
 	guidedDevelopmentPanel = new GuidedDevelopmentPanel(extContext);
 	registerAndSubscribeCommand("loadGuidedDevelopment", guidedDevelopmentPanel.loadWebviewPanel.bind(guidedDevelopmentPanel));

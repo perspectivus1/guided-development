@@ -4,7 +4,7 @@ import { IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
 import { IInternalItem, IInternalCollection } from "./Collection";
-
+import { Contributors } from "./contributors";
 
 export class GuidedDevelopment {
 
@@ -34,6 +34,11 @@ export class GuidedDevelopment {
     this.collections = collections;
     this.items = items;
     this.messages = messages;
+  }
+
+  public setCollections(collections: Array<IInternalCollection>) {
+    this.collections = collections;
+    const response: any = this.rpc.invoke("showCollections", [this.collections]);
   }
 
   private getCollection(id: string): IInternalCollection {

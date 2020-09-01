@@ -38,7 +38,7 @@ describe('Contributors unit test', () => {
     describe('init', () => {
         it("No Contributors", () => {
             contributorsMock.expects("add").never();
-            Contributors.getContributors().init();
+            Contributors.getInstance().init();
         });
     });
 
@@ -90,7 +90,7 @@ describe('Contributors unit test', () => {
             },
         };
         const extensionName = "vscode-guided-dev-contrib";
-        Contributors.getContributors()["add"](extensionName, api);
+        Contributors.getInstance()["add"](extensionName, api);
         
         it("receives valid contributorName and guidedDevName ---> returns valid guidedDev", () => {
             const uiOptions = {

@@ -7,6 +7,9 @@ const datauri = require("datauri");
 var path = require('path');
 // const DEFAULT_IMAGE = require("../images/defaultImage");
 
+let changedCallback: (id: string) => void;
+let changedCallbackThis: Object;
+
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-contrib1" is now active!');
 
@@ -126,6 +129,10 @@ export function activate(context: vscode.ExtensionContext) {
             };
             items.push(item);
             return items;
+        },
+        registerOnChangedCallback: (thisArg: Object, callback: (id: string) => void) => {
+            changedCallbackThis = thisArg;
+            changedCallback = callback;
         }
     };
 

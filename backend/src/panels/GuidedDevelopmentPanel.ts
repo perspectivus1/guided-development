@@ -1,6 +1,4 @@
 import * as _ from 'lodash';
-import * as path from 'path';
-import * as os from "os";
 import * as vscode from 'vscode';
 import { GuidedDevelopment } from "../guided-development";
 import { RpcExtension } from '@sap-devx/webview-rpc/out.ext/rpc-extension';
@@ -12,7 +10,6 @@ import { VSCodeEvents } from '../vscode-events';
 import { AbstractWebviewPanel } from './AbstractWebviewPanel';
 import { Contributors } from "../contributors";
 import { IInternalItem, IInternalCollection } from "../Collection";
-
 
 export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	public static GUIDED_DEVELOPMENT = "Guided Development";
@@ -26,10 +23,10 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	public setWebviewPanel(webViewPanel: vscode.WebviewPanel, uiOptions?: any) {
 		super.setWebviewPanel(webViewPanel);
 
-		this.collections = Contributors.getContributors().getCollections();
-		this.items = Contributors.getContributors().getItems();
-		if (_.isNil(this.collections)) {
-			return vscode.window.showErrorMessage("Can not find guided-development.");
+		const collections = Contributors.getInstance().getCollections();
+		this.items = Contributors.getInstance().getItems();
+		if (_.isNil(collections)) {
+			return vscode.window.showErrorMessage("Could not find guided development contributions");
 		}
 
 		this.messages = backendMessages;
@@ -42,9 +39,11 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 			this.outputChannel, 
 			this.logger,
 			this.messages,
-			this.collections,
+			collections,
 			this.items
 		);
+
+		Contributors.getInstance().registerOnItemsChangedCallback(this.guidedDevelopment, this.guidedDevelopment.setCollections);
 
 		this.initWebviewPanel();
 	}
@@ -58,7 +57,6 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	}
 
 	private guidedDevelopment: GuidedDevelopment;
-	private collections: Array<IInternalCollection>;
 	private items: Map<String, IInternalItem>;
 	private messages: any;
 	private outputChannel: AppLog;

@@ -1,9 +1,18 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 import { IInternalItem, IInternalCollection } from "./Collection";
+import { IItem, IGuidedDevContribution } from './types/GuidedDev';
 
 export class Contributors {
-    public static getContributors(): Contributors {
+    private onItemsChangedCallback: (collections: Array<IInternalCollection>) => void;
+    private onItemsChangedCallbackThis: Object;
+
+    public registerOnItemsChangedCallback(thisArg: Object, callback: (collections: Array<IInternalCollection>) => void): void {
+        this.onItemsChangedCallback = callback;
+        this.onItemsChangedCallbackThis = thisArg;
+    }
+
+    public static getInstance(): Contributors {
         if (!Contributors.contributors) {
             Contributors.contributors = new Contributors();
         }
@@ -11,17 +20,24 @@ export class Contributors {
     }
 
     private constructor() {
-        this.collections = [];
+        this.collectionsMap = new Map();
+        this.apiMap = new Map();
         this.items = new Map();
     }
 
     private static contributors: Contributors;
 
-    private collections: Array<IInternalCollection>;
+    private collectionsMap: Map<string, Array<IInternalCollection>>;
+    private apiMap: Map<string, IGuidedDevContribution>;
     private items: Map<string, IInternalItem>;
 
     public getCollections(): Array<IInternalCollection> {
-        return this.collections;
+        const collections: Array<IInternalCollection> = [];
+        for (const extensionCollections of this.collectionsMap.values()) {
+            collections.push(...extensionCollections);
+        }
+
+        return _.sortBy(collections, ['type']);
     }
 
     public getItems(): Map<string, IInternalItem> {
@@ -30,8 +46,15 @@ export class Contributors {
 
     private add(extensionId: string, api: any) {
         if (api.guidedDevContribution) {
-            this.addItems(extensionId, api.guidedDevContribution.getItems());
-            this.addCollections(api.guidedDevContribution.getCollections());
+            const contribution: IGuidedDevContribution = api.guidedDevContribution;
+            this.apiMap.set(extensionId, contribution);
+
+            // register self as callback for contributors to call when items are changed
+            contribution.registerOnChangedCallback(this, this.onChanged);
+
+            this.addItems(extensionId, contribution.getItems());
+
+            this.addCollections(extensionId, contribution.getCollections() as IInternalCollection[]);
         }
     }
 
@@ -50,9 +73,24 @@ export class Contributors {
         return api;
     }
 
+    public onChanged(extensionId: string): void {
+        console.log("in onChanged");
+        // other collections might be affected by items changed by current extension
+        const contribution = this.apiMap.get(extensionId);
+        if (contribution) {
+            const collections = contribution.getCollections();
+            this.collectionsMap.set(extensionId, collections as IInternalCollection[]);
+
+            const items = contribution.getItems();
+            this.addItems(extensionId, items);
+            this.initCollections();
+            this.onItemsChangedCallback.call(this.onItemsChangedCallbackThis, this.getCollections());
+        }
+    }
+
     public async init() {
         const allExtensions: readonly vscode.Extension<any>[] = vscode.extensions.all;
-        for (const extension of allExtensions) {
+        for await (const extension of allExtensions) {
             const currentPackageJSON: any = _.get(extension, "packageJSON");
             const guidedDevelopmentContribution: any = _.get(currentPackageJSON, "BASContributes.guided-development");
             if (!_.isNil(guidedDevelopmentContribution)) {
@@ -70,32 +108,31 @@ export class Contributors {
         }
     }
 
-    private addCollections(collections: Array<IInternalCollection>) {
-        for (const collection of collections) {
-            this.collections.push(collection);
-        }
+    private addCollections(extensionId: string, collections: Array<IInternalCollection>) {
+        this.collectionsMap.set(extensionId, collections);
     }
 
     private initCollections() {
         this.initCollectionItems();
-        this.collections = _.sortBy(this.collections, ['type']);
     }
 
     private initCollectionItems() {
-        for (const collection of this.collections) {
-            collection.items = [];
-            for (const itemId of collection.itemIds) {
-                const item: IInternalItem = this.items.get(itemId);
-                if (item) {
-                    collection.items.push(item);
-                    this.initItems(item);
+        for (const extensionCollections of this.collectionsMap.values()) {
+            for (const collection of extensionCollections) {
+                collection.items = [];
+                for (const itemId of collection.itemIds) {
+                    const item: IInternalItem = this.items.get(itemId);
+                    if (item) {
+                        collection.items.push(item);
+                        this.initItems(item);
+                    }
                 }
             }
         }
     }
 
     private initItems(item: IInternalItem) {
-        if (!item.itemIds || item.itemIds == []){
+        if (!item.itemIds || item.itemIds == []) {
             return
         }
         item.items = []

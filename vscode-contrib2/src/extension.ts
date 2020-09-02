@@ -16,8 +16,8 @@ export function activate(context: vscode.ExtensionContext) {
                 description: "This is a demo collection. It contains self-contributed items and and an item contributed by a different contributor.",
                 type: CollectionType.Platform,
                 itemIds: [
-                    "SAPOSS.vscode-contrib2.cfLogin",
-                    "SAPOSS.vscode-contrib1.show-items"
+                    "saposs.vscode-contrib2.cfLogin",
+                    "saposs.vscode-contrib1.show-items"
                 ]
             };
             collections.push(collection);
@@ -46,8 +46,8 @@ export function activate(context: vscode.ExtensionContext) {
                 title: "Show items",
                 description: "Shows list of items",
                 itemIds: [
-                    "SAPOSS.vscode-contrib1.clone",
-                    "SAPOSS.vscode-contrib1.show-info"
+                    "saposs.vscode-contrib1.clone",
+                    "saposs.vscode-contrib1.show-info"
                 ],
                 labels: [
                     {"Project Name": "cap2"},

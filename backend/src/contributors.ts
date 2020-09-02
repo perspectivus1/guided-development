@@ -57,7 +57,7 @@ export class Contributors {
             const guidedDevelopmentContribution: any = _.get(currentPackageJSON, "BASContributes.guided-development");
             if (!_.isNil(guidedDevelopmentContribution)) {
                 const api = await Contributors.getApi(extension);
-                this.add(extension.id, api);
+                this.add(extension.id.toLowerCase(), api);
             }
         }
         this.initCollections();
@@ -85,7 +85,7 @@ export class Contributors {
         for (const collection of this.collections) {
             collection.items = [];
             for (const itemId of collection.itemIds) {
-                const item: IInternalItem = this.items.get(itemId);
+                const item: IInternalItem = this.items.get(itemId.toLocaleLowerCase());
                 if (item) {
                     collection.items.push(item);
                     this.initItems(item);
@@ -100,7 +100,7 @@ export class Contributors {
         }
         item.items = []
         for (const itemId of item.itemIds) {
-            const subitem: IInternalItem = this.items.get(itemId);
+            const subitem: IInternalItem = this.items.get(itemId.toLowerCase());
             if (subitem) {
                 item.items.push(subitem);
                 this.initItems(subitem);

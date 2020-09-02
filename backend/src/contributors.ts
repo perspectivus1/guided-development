@@ -4,12 +4,12 @@ import { IInternalItem, IInternalCollection } from "./Collection";
 import { IItem, IGuidedDevContribution } from './types/GuidedDev';
 
 export class Contributors {
-    private onItemsChangedCallback: (collections: Array<IInternalCollection>) => void;
-    private onItemsChangedCallbackThis: Object;
+    private onChangedCallback: (collections: Array<IInternalCollection>) => void;
+    private onChangedCallbackThis: Object;
 
-    public registerOnItemsChangedCallback(thisArg: Object, callback: (collections: Array<IInternalCollection>) => void): void {
-        this.onItemsChangedCallback = callback;
-        this.onItemsChangedCallbackThis = thisArg;
+    public registerOnChangedCallback(thisArg: Object, callback: (collections: Array<IInternalCollection>) => void): void {
+        this.onChangedCallback = callback;
+        this.onChangedCallbackThis = thisArg;
     }
 
     public static getInstance(): Contributors {
@@ -84,7 +84,7 @@ export class Contributors {
             const items = contribution.getItems();
             this.addItems(extensionId, items);
             this.initCollections();
-            this.onItemsChangedCallback.call(this.onItemsChangedCallbackThis, this.getCollections());
+            this.onChangedCallback.call(this.onChangedCallbackThis, this.getCollections());
         }
     }
 

@@ -4,7 +4,6 @@ import { IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
 import { IInternalItem, IInternalCollection } from "./Collection";
-import { Contributors } from "./contributors";
 
 export class GuidedDevelopment {
 
@@ -14,9 +13,8 @@ export class GuidedDevelopment {
   private readonly outputChannel: AppLog;
   private readonly logger: IChildLogger;
   private collections: Array<IInternalCollection>;
-  private items: Map<String,IInternalItem>;
 
-  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: IInternalCollection[], items: Map<String,IInternalItem>) {
+  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: IInternalCollection[]) {
     this.rpc = rpc;
     if (!this.rpc) {
       throw new Error("rpc must be set");
@@ -32,7 +30,6 @@ export class GuidedDevelopment {
     this.rpc.registerMethod({ func: this.performAction, thisArg: this });
 
     this.collections = collections;
-    this.items = items;
     this.messages = messages;
   }
 
@@ -41,20 +38,15 @@ export class GuidedDevelopment {
     const response: any = this.rpc.invoke("showCollections", [this.collections]);
   }
 
-  private getCollection(id: string): IInternalCollection {
-    const collection = this.collections.find((value) => {
-      return value.id === id;
-    });
-    return collection;
-  }
-
   private getItem(itemFqid: string): IInternalItem {
-    const item: IInternalItem = this.items.get(itemFqid);
-    if (item) {
-      return item;
-    } else {
-      // TODO - console log: item does not exist
+    for (const collection of this.collections) {
+      for (const item of collection.items) {
+        if (item.fqid === itemFqid) {
+          return item;
+        }
+      }
     }
+    // TODO - console log: item does not exist
   }
 
   private async performAction(itemFqid: string) {

@@ -7,7 +7,7 @@ import backendMessages from "../messages";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from '../app-events';
 import { ActionType, CollectionType } from "../types/GuidedDev";
-import { IInternalItem, IInternalCollection } from "../Collection";
+import { IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
 // import * as vscode from 'vscode';
 
@@ -42,15 +42,9 @@ class GuidedDevelopmentWebSocketServer {
       const logger: AppLog = new ServerLog(this.rpc);
       const childLogger = {debug: () => {}, error: () => {}, fatal: () => {}, warn: () => {}, info: () => {}, trace: () => {}, getChildLogger: () => {return {} as IChildLogger;}};
       const collections = createCollections();
-      const items = createItems(collections);
-      this.guidedDevelopment = new GuidedDevelopment(this.rpc, this.appEvents, logger, childLogger as IChildLogger, backendMessages, collections, items);
+      this.guidedDevelopment = new GuidedDevelopment(this.rpc, this.appEvents, logger, childLogger as IChildLogger, backendMessages, collections);
     });
   }
-}
-
-function createItems(collections: IInternalCollection[]): Map<string, IInternalItem> {
-  const items = new Map();
-  return items;
 }
 
 function createCollections(): IInternalCollection[] {

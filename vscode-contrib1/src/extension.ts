@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 
 const datauri = require("datauri");
 var path = require('path');
-// const DEFAULT_IMAGE = require("../images/defaultImage");
+// const DEFAULT_IMAGE = require("../defaultImage");
 
 let changedCallback: (id: string) => void;
 let changedCallbackThis: Object;
@@ -23,12 +23,12 @@ export function activate(context: vscode.ExtensionContext) {
                 description: "This is a demo collection. It contains self-contributed items and and an item contributed by a different contributor.",
                 type: CollectionType.Scenario,
                 itemIds: [
-                    "SAPOSS.vscode-contrib1.open",
-                    "SAPOSS.vscode-contrib1.clone",
-                    "SAPOSS.vscode-contrib1.open-command",
-                    "SAPOSS.vscode-contrib2.cfLogin",
-                    "SAPOSS.vscode-contrib1.show-info",
-                    "SAPOSS.vscode-contrib1.show-items"
+                    "saposs.vscode-contrib1.open",
+                    "saposs.vscode-contrib1.clone",
+                    "saposs.vscode-contrib1.open-command",
+                    "saposs.vscode-contrib2.cfLogin",
+                    "saposs.vscode-contrib1.show-info",
+                    "saposs.vscode-contrib1.show-items"
                 ]
             };
             collections.push(collection);
@@ -41,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "open",
                 title: "Open Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                image: getImage(path.join(context.extensionUri.fsPath, "./src/images/settings2.png")),
+                image: getImage(path.join(context.extensionPath, 'resources', 'settings2.png')),
                 action: {
                     name: "Open",
                     type: ActionType.Execute,
@@ -95,7 +95,7 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "show-info",
                 title: "Show info message",
                 description: "Shows a information message",
-                image: getImage(path.join(context.extensionUri.fsPath, "./src/images/info.png")),
+                image: getImage(path.join(context.extensionPath, 'resources', 'info.png')),
                 action: {
                     name: "Show",
                     type: ActionType.Execute,
@@ -115,11 +115,11 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "show-items",
                 title: "Show items",
                 description: "Shows list of items",
-                image: getImage(path.join(context.extensionUri.fsPath, "./src/images/items.png")),
+                image: getImage(path.join(context.extensionPath, 'resources', 'items.png')),
                 itemIds: [
-                    "SAPOSS.vscode-contrib1.open",
-                    "SAPOSS.vscode-contrib2.cfLogin",
-                    "SAPOSS.vscode-contrib1.show-info"
+                    "saposs.vscode-contrib1.open",
+                    "saposs.vscode-contrib2.cfLogin",
+                    "saposs.vscode-contrib1.show-info"
                 ],
                 labels: [
                     {"Project Name": "cap2"},

@@ -16,8 +16,8 @@ function getInitialCollections(): ICollection[] {
         description: "This is a demo collection. It contains self-contributed items and and an item contributed by a different contributor.",
         type: CollectionType.Platform,
         itemIds: [
-            "SAPOSS.vscode-contrib2.cfLogin",
-            "SAPOSS.vscode-contrib1.show-items"
+            "saposs.vscode-contrib2.cfLogin",
+            "saposs.vscode-contrib1.show-items"
         ]
     };
     collections.push(collection);
@@ -47,8 +47,8 @@ function getInitialItems(): IItem[] {
         title: "Show items",
         description: "Shows list of items",
         itemIds: [
-            "SAPOSS.vscode-contrib1.clone",
-            "SAPOSS.vscode-contrib1.show-info"
+            "saposs.vscode-contrib1.clone",
+            "saposs.vscode-contrib1.show-info"
         ],
         labels: [
             {"Project Name": "cap2"},
@@ -86,13 +86,13 @@ export function activate(context: vscode.ExtensionContext) {
             description: "This is another demo collection. It appears only after a file is created in the workspace",
             type: CollectionType.Platform,
             itemIds: [
-                "SAPOSS.vscode-contrib2.itemx",
+                "saposs.vscode-contrib2.itemx",
             ]
         };
         collections = [collection];
     
         items = [item];
-        changedCallback.call(changedCallbackThis, "SAPOSS.vscode-contrib2");
+        changedCallback.call(changedCallbackThis, "saposs.vscode-contrib2");
     });
 
     const guidedDevContribution : IGuidedDevContribution = {

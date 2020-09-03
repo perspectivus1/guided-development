@@ -74,8 +74,7 @@ export class Contributors {
     }
 
     public onChanged(extensionId: string): void {
-        console.log("in onChanged");
-        // other collections might be affected by items changed by current extension
+        // TODO: other collections might be affected by items changed by current extension
         const contribution = this.apiMap.get(extensionId);
         if (contribution) {
             const collections = contribution.getCollections();
@@ -95,7 +94,7 @@ export class Contributors {
             const guidedDevelopmentContribution: any = _.get(currentPackageJSON, "BASContributes.guided-development");
             if (!_.isNil(guidedDevelopmentContribution)) {
                 const api = await Contributors.getApi(extension);
-                this.add(extension.id, api);
+                this.add(extension.id.toLowerCase(), api);
             }
         }
         this.initCollections();
@@ -121,7 +120,7 @@ export class Contributors {
             for (const collection of extensionCollections) {
                 collection.items = [];
                 for (const itemId of collection.itemIds) {
-                    const item: IInternalItem = this.items.get(itemId);
+                    const item: IInternalItem = this.items.get(itemId.toLocaleLowerCase());
                     if (item) {
                         collection.items.push(item);
                         this.initItems(item);
@@ -137,7 +136,7 @@ export class Contributors {
         }
         item.items = []
         for (const itemId of item.itemIds) {
-            const subitem: IInternalItem = this.items.get(itemId);
+            const subitem: IInternalItem = this.items.get(itemId.toLowerCase());
             if (subitem) {
                 item.items.push(subitem);
                 this.initItems(subitem);

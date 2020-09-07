@@ -22,14 +22,14 @@ export class Contributors {
     private constructor() {
         this.collectionsMap = new Map();
         this.apiMap = new Map();
-        this.items = new Map();
+        this.itemsMap = new Map();
     }
 
     private static contributors: Contributors;
 
     private collectionsMap: Map<string, Array<IInternalCollection>>;
     private apiMap: Map<string, IGuidedDevContribution>;
-    private items: Map<string, IInternalItem>;
+    private itemsMap: Map<string, IInternalItem>;
 
     public getCollections(): Array<IInternalCollection> {
         const collections: Array<IInternalCollection> = [];
@@ -41,7 +41,7 @@ export class Contributors {
     }
 
     public getItems(): Map<string, IInternalItem> {
-        return this.items;
+        return this.itemsMap;
     }
 
     private add(extensionId: string, api: any) {
@@ -103,7 +103,7 @@ export class Contributors {
     private addItems(extensionId: string, items: Array<IInternalItem>) {
         for (const item of items) {
             item.fqid = `${extensionId}.${item.id}`;
-            this.items.set(item.fqid, item);
+            this.itemsMap.set(item.fqid, item);
         }
     }
 
@@ -120,7 +120,7 @@ export class Contributors {
             for (const collection of extensionCollections) {
                 collection.items = [];
                 for (const itemId of collection.itemIds) {
-                    const item: IInternalItem = this.items.get(itemId.toLocaleLowerCase());
+                    const item: IInternalItem = this.itemsMap.get(itemId.toLocaleLowerCase());
                     if (item) {
                         collection.items.push(item);
                         this.initItems(item);
@@ -136,7 +136,7 @@ export class Contributors {
         }
         item.items = []
         for (const itemId of item.itemIds) {
-            const subitem: IInternalItem = this.items.get(itemId.toLowerCase());
+            const subitem: IInternalItem = this.itemsMap.get(itemId.toLowerCase());
             if (subitem) {
                 item.items.push(subitem);
                 this.initItems(subitem);

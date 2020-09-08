@@ -73,16 +73,26 @@ export class Contributors {
         return api;
     }
 
+    private removeItems(extensionId: string): void {
+        // remove all items that this extension contributed from itemsMap
+        for (const fqid of this.itemsMap.keys()) {
+            if (fqid.startsWith(extensionId)) {
+                this.itemsMap.delete(fqid);
+            }
+        }
+    }
+
     public onChanged(extensionId: string): void {
         // TODO: other collections might be affected by items changed by current extension
         const contribution = this.apiMap.get(extensionId);
         if (contribution) {
             const collections = contribution.getCollections();
-            this.collectionsMap.set(extensionId, collections as IInternalCollection[]);
+            this.addCollections(extensionId, collections as IInternalCollection[]);
 
             const items = contribution.getItems();
+            this.removeItems(extensionId);
             this.addItems(extensionId, items);
-            this.initCollections();
+            this.initItems();
             this.onChangedCallback.call(this.onChangedCallbackThis, this.getCollections());
         }
     }
@@ -97,7 +107,7 @@ export class Contributors {
                 this.add(extension.id.toLowerCase(), api);
             }
         }
-        this.initCollections();
+        this.initItems();
     }
 
     private addItems(extensionId: string, items: Array<IInternalItem>) {
@@ -111,35 +121,30 @@ export class Contributors {
         this.collectionsMap.set(extensionId, collections);
     }
 
-    private initCollections() {
-        this.initCollectionItems();
-    }
-
-    private initCollectionItems() {
-        for (const extensionCollections of this.collectionsMap.values()) {
-            for (const collection of extensionCollections) {
+    private initItems() {
+        for (const collections of this.collectionsMap.values()) {
+            for (const collection of collections) {
                 collection.items = [];
                 for (const itemId of collection.itemIds) {
                     const item: IInternalItem = this.itemsMap.get(itemId.toLocaleLowerCase());
                     if (item) {
                         collection.items.push(item);
-                        this.initItems(item);
+                        this.initSubItems(item);
                     }
                 }
             }
         }
     }
 
-    private initItems(item: IInternalItem) {
-        if (!item.itemIds || item.itemIds == []) {
-            return
-        }
-        item.items = []
-        for (const itemId of item.itemIds) {
-            const subitem: IInternalItem = this.itemsMap.get(itemId.toLowerCase());
-            if (subitem) {
-                item.items.push(subitem);
-                this.initItems(subitem);
+    private initSubItems(item: IInternalItem) {
+        if (item.itemIds) {
+            item.items = [];
+            for (const itemId of item.itemIds) {
+                const subitem: IInternalItem = this.itemsMap.get(itemId.toLowerCase());
+                if (subitem) {
+                    item.items.push(subitem);
+                    this.initSubItems(subitem);
+                }
             }
         }
     }

@@ -2,6 +2,8 @@
 import { ICollection, CollectionType, IItem, ActionType, IGuidedDevContribution } from './types/GuidedDev';
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
+import * as path from 'path';
+import { update } from 'lodash';
 
 let changedCallback: (id: string) => void;
 let changedCallbackThis: Object;
@@ -48,12 +50,12 @@ function getInitialItems(): IItem[] {
         description: "Shows list of items",
         itemIds: [
             "saposs.vscode-contrib1.clone",
-            "saposs.vscode-contrib1.show-info"
+            // "saposs.vscode-contrib1.show-info"
         ],
         labels: [
-            {"Project Name": "cap2"},
-            {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap2"}
+            { "Project Name": "cap2" },
+            { "Project Type": "CAP" },
+            { "Path": "/home/user/projects/cap2" }
         ]
     };
     items.push(item);
@@ -61,15 +63,24 @@ function getInitialItems(): IItem[] {
     return items;
 }
 
-export function activate(context: vscode.ExtensionContext) {
-    console.log('Congratulations, your extension "vscode-contrib2" is now active!');
+const fileNamesMap: Map<string, string> = new Map();
 
-    const watcher = vscode.workspace.createFileSystemWatcher("**", false, true, true);
-    watcher.onDidCreate((e) => {
+function updateCollectionsAndItems(): void {
+    let collection: ICollection = {
+        id: "collection3",
+        title: "Demo collection 3",
+        description: "This is another demo collection. It appears only after a file is created in the workspace",
+        type: CollectionType.Platform,
+        itemIds: []
+    };
+
+    items = [];
+    for (const fileName of fileNamesMap.values()) {
+        collection.itemIds.push(`saposs.vscode-contrib2.${fileName}`);
         let item: IItem = {
-            id: "itemx",
-            title: e.path,
-            description: e.path,
+            id: fileName,
+            title: fileName,
+            description: fileName,
             action: {
                 name: "Login",
                 type: ActionType.Execute,
@@ -79,23 +90,41 @@ export function activate(context: vscode.ExtensionContext) {
             },
             labels: []
         };
+        items.push(item);
+    }
 
-        let collection: ICollection = {
-            id: "collection3",
-            title: "Demo collection 3",
-            description: "This is another demo collection. It appears only after a file is created in the workspace",
-            type: CollectionType.Platform,
-            itemIds: [
-                "saposs.vscode-contrib2.itemx",
-            ]
-        };
-        collections = [collection];
-    
-        items = [item];
-        changedCallback.call(changedCallbackThis, "saposs.vscode-contrib2");
+    collections = [collection];
+}
+
+export function activate(context: vscode.ExtensionContext) {
+    console.log('Congratulations, your extension "vscode-contrib2" is now active!');
+
+    const watcher = vscode.workspace.createFileSystemWatcher("**", false, true, false);
+    watcher.onDidDelete((e) => {
+        fileNamesMap.delete(e.fsPath);
+
+        updateCollectionsAndItems();
+
+        if (changedCallback) {
+            changedCallback.call(changedCallbackThis, "saposs.vscode-contrib2");
+        }
     });
 
-    const guidedDevContribution : IGuidedDevContribution = {
+    watcher.onDidCreate((e) => {
+        if (vscode.workspace.rootPath) {
+            if (e.fsPath.includes(vscode.workspace.rootPath)) {
+                fileNamesMap.set(e.fsPath, path.basename(e.path));
+
+                updateCollectionsAndItems();
+
+                if (changedCallback) {
+                    changedCallback.call(changedCallbackThis, "saposs.vscode-contrib2");
+                }
+            }
+        }
+    });
+
+    const guidedDevContribution: IGuidedDevContribution = {
         // return items based on workspace folders/projects
         getCollections: () => {
             return collections;
@@ -116,7 +145,7 @@ export function activate(context: vscode.ExtensionContext) {
     return api;
 }
 
-export function deactivate() {}
+export function deactivate() { }
 
 // OPEN ISSUES:
 //   Collection that reference items from other contributors:

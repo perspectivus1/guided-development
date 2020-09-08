@@ -42,7 +42,37 @@ class GuidedDevelopmentWebSocketServer {
       const logger: AppLog = new ServerLog(this.rpc);
       const childLogger = {debug: () => {}, error: () => {}, fatal: () => {}, warn: () => {}, info: () => {}, trace: () => {}, getChildLogger: () => {return {} as IChildLogger;}};
       const collections = createCollections();
+
       this.guidedDevelopment = new GuidedDevelopment(this.rpc, this.appEvents, logger, childLogger as IChildLogger, backendMessages, collections);
+
+      // demonstrate updating of items (mimics contributors calling the onChange callback)
+      setTimeout(() => {
+        collections[0].itemIds.push("saposs.vscode-contrib1.new");
+
+        const item = {
+          id: "new",
+          fqid: "saposs.vscode-contrib1.new",
+          title: "new item",
+          description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+          image: getImage(),
+          action: {
+            name: "Open",
+            type: ActionType.Execute,
+            performAction: () => {
+                console.log("workbench.action.openGlobalSettings");
+                return Promise.resolve();
+            },
+          },
+          labels: [
+              {"Project Name": "cap1"},
+              {"Path": "/home/user/projects/cap1"},
+              {"Project Type": "CAP"},
+          ]
+        };
+  
+        (collections[0] as IInternalCollection).items.push(item);
+        this.guidedDevelopment.setCollections(collections);
+      }, 3000);
     });
   }
 }
@@ -55,8 +85,8 @@ function createCollections(): IInternalCollection[] {
     description: "This is a demo collection. It contains a self-contributed item and and items contributed by a different contributor.",
     type: CollectionType.Scenario,
     itemIds: [
-        "SAPOSS.vscode-contrib1.open",
-        "SAPOSS.vscode-contrib2.clone"
+        "saposs.vscode-contrib1.open",
+        "saposs.vscode-contrib2.clone"
     ],
     items: [
       {
@@ -81,7 +111,7 @@ function createCollections(): IInternalCollection[] {
       },
       {
         id: "open-command",
-        fqid: "SAPOSS.vscode-contrib2.open-command",
+        fqid: "saposs.vscode-contrib2.open-command",
         title: "Open Global Settings (via command)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
         action: {
@@ -107,21 +137,21 @@ function createCollections(): IInternalCollection[] {
     description: "This is another demo collection.",
     type: CollectionType.Platform,
     itemIds: [
-        "SAPOSS.vscode-contrib2.show-items"
+        "saposs.vscode-contrib2.show-items"
     ],
     items: [
       {
         id: "show-items",
         title: "Show items",
         description: "Shows list of items",
-        fqid: "SAPOSS.vscode-contrib2.show-items",
+        fqid: "saposs.vscode-contrib2.show-items",
         itemIds: [
-          "SAPOSS.vscode-contrib2.open-command"
+          "saposs.vscode-contrib2.open-command"
         ],
         items: [
           {
             id: "open-command",
-            fqid: "SAPOSS.vscode-contrib2.open-command",
+            fqid: "saposs.vscode-contrib2.open-command",
             title: "Open Global Settings (via command)",
             description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
             action: {

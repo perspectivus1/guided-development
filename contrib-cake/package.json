@@ -1,6 +1,6 @@
 {
-	"name": "vscode-contrib1",
-	"displayName": "vscode-guided-dev-contrib1",
+	"name": "contrib-cake",
+	"displayName": "contrib-cake",
 	"description": "",
 	"version": "0.0.1",
 	"publisher": "SAPOSS",
@@ -10,7 +10,7 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SAP/guided-development",
-		"directory": "vscode-contrib1"
+		"directory": "contrib-cake"
 	},
 	"categories": [
 		"Other"

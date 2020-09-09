@@ -93,7 +93,9 @@ export class Contributors {
             this.removeItems(extensionId);
             this.addItems(extensionId, items);
             this.initItems();
-            this.onChangedCallback.call(this.onChangedCallbackThis, this.getCollections());
+            if (this.onChangedCallback) {
+                this.onChangedCallback.call(this.onChangedCallbackThis, this.getCollections());
+            }
         }
     }
 

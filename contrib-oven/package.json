@@ -1,6 +1,6 @@
 {
-	"name": "vscode-contrib2",
-	"displayName": "vscode-guided-dev-contrib2",
+	"name": "contrib-oven",
+	"displayName": "contrib-oven",
 	"description": "",
 	"version": "0.0.1",
 	"publisher": "SAPOSS",
@@ -10,7 +10,7 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SAP/guided-development",
-		"directory": "vscode-contrib2"
+		"directory": "contrib-oven"
 	},
 	"categories": [
 		"Other"

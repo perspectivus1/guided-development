@@ -44,6 +44,13 @@ export class GuidedDevelopment {
         if (item.fqid === itemFqid) {
           return item;
         }
+        if (item.items) {
+          for (const subItem of item.items) {
+            if (subItem.fqid === itemFqid) {
+              return subItem;
+            }  
+          }
+        }
       }
     }
     // TODO - console log: item does not exist

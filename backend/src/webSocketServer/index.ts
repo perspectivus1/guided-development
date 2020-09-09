@@ -86,12 +86,12 @@ function createCollections(): IInternalCollection[] {
     type: CollectionType.Scenario,
     itemIds: [
         "saposs.vscode-contrib1.open",
-        "saposs.vscode-contrib2.clone"
+        "saposs.vscode-contrib2.open2"
     ],
     items: [
       {
         id: "open",
-        fqid: "SAPOSS.vscode-contrib1.open",
+        fqid: "saposs.vscode-contrib1.open",
         title: "Open Global Settings (via execute)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
         image: getImage(),
@@ -111,7 +111,7 @@ function createCollections(): IInternalCollection[] {
       },
       {
         id: "open-command",
-        fqid: "saposs.vscode-contrib2.open-command",
+        fqid: "saposs.vscode-contrib2.open2",
         title: "Open Global Settings (via command)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
         action: {

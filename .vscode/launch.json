@@ -49,13 +49,13 @@
       "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/backend",
-        "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib1",
-        "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib2",
+        "--extensionDevelopmentPath=${workspaceFolder}/contrib-cake",
+        "--extensionDevelopmentPath=${workspaceFolder}/contrib-oven",
     ],
       "outFiles": [
         "${workspaceFolder}/backend/dist/**/*.js",
-        "${workspaceFolder/vscode-contrib1/out/**/*.js",
-        "${workspaceFolder/vscode-contrib2/out/**/*.js"
+        "${workspaceFolder/contrib-cake/out/**/*.js",
+        "${workspaceFolder/contrib-oven/out/**/*.js"
       ],
       "preLaunchTask": "watch backend (webpack)"
     },

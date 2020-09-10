@@ -3,6 +3,7 @@ import { ICollection, CollectionType, IItem, ActionType, IGuidedDevContribution 
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as _ from 'lodash';
+import { dir } from 'console';
 
 
 const datauri = require("datauri");
@@ -84,11 +85,20 @@ function getItems(): Array<IItem> {
     const items: Array<IItem> = [];
 
     for (const mapEntry of bakeItemsMap) {
+        const dirname = mapEntry[0];
+        const name = path.parse(dirname).name;
+
         for (const itemId of mapEntry[1]) {
             const origItem = initialItems.find(value => itemId.includes(`${EXT_ID}.${value.id}`));
             if (origItem) {
                 const clonedItem: IItem = cloneItems([origItem])[0];
-                clonedItem.id = `${origItem.id}-${mapEntry[0]}`;
+                clonedItem.id = `${origItem.id}-${name}`;
+                clonedItem.labels = [
+                    { "Project Name": name },
+                    { "Project Type": "Baked Cake" },
+                    { "Path": dirname }
+                ]
+        
                 items.push(clonedItem);
             }
         }
@@ -113,9 +123,7 @@ function getInitialItems(): Array<IItem> {
             },
         },
         labels: [
-            { "Project Name": "cap1" },
-            { "Project Type": "CAP" },
-            { "Path": "/home/user/projects/cap1" }
+            { "Project Type": "All Cakes" }
         ]
     };
     items.push(item);
@@ -177,11 +185,7 @@ function getInitialItems(): Array<IItem> {
                 return vscode.window.showInformationMessage("The cake mix was poured into the pan");
             },
         },
-        labels: [
-            { "Project Name": "cap2" },
-            { "Project Type": "CAP" },
-            { "Path": "/home/user/projects/cap2" }
-        ]
+        labels: []
     };
     items.push(item);
 
@@ -194,11 +198,7 @@ function getInitialItems(): Array<IItem> {
             `${EXT_ID}.insert-pan`,
             "saposs.contrib-oven.close-oven"
         ],
-        labels: [
-            { "Project Name": "cap2" },
-            { "Project Type": "CAP" },
-            { "Path": "/home/user/projects/cap2" }
-        ]
+        labels: []
     };
     items.push(item);
 
@@ -215,14 +215,13 @@ function addBakeCollection(dirPath: string): void {
     for (const index in collection.itemIds) {
         collection.itemIds[index] = `${collection.itemIds[index]}-${name}`;
     }
-    bakeCollectionMap.set(name, collection);
-    bakeItemsMap.set(name, collection.itemIds);
+    bakeCollectionMap.set(dirPath, collection);
+    bakeItemsMap.set(dirPath, collection.itemIds);
 }
 
 function removeBakeCollection(dirPath: string): void {
-    const name = path.parse(dirPath).name;
-    bakeCollectionMap.delete(name);
-    bakeItemsMap.delete(name);
+    bakeCollectionMap.delete(dirPath);
+    bakeItemsMap.delete(dirPath);
 }
 
 export function activate(context: vscode.ExtensionContext) {

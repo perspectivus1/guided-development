@@ -19,7 +19,7 @@ function getInitialItems(): IItem[] {
         id: "prep-oven",
         title: "Prepare Oven",
         description: "Prepare your oven",
-        action: {
+        action1: {
             name: "Turn on",
             type: ActionType.Execute,
             performAction: () => {
@@ -34,7 +34,7 @@ function getInitialItems(): IItem[] {
         id: "open-oven",
         title: "Open Oven",
         description: "Open your oven",
-        action: {
+        action1: {
             name: "Open",
             type: ActionType.Execute,
             performAction: () => {
@@ -49,7 +49,7 @@ function getInitialItems(): IItem[] {
         id: "close-oven",
         title: "Close Oven",
         description: "Close your oven",
-        action: {
+        action1: {
             name: "Close",
             type: ActionType.Execute,
             performAction: () => {
@@ -64,7 +64,7 @@ function getInitialItems(): IItem[] {
         id: "bake",
         title: "Bake",
         description: "Bake",
-        action: {
+        action1: {
             name: "Bake",
             type: ActionType.Execute,
             performAction: () => {

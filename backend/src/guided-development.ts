@@ -13,8 +13,9 @@ export class GuidedDevelopment {
   private readonly outputChannel: AppLog;
   private readonly logger: IChildLogger;
   private collections: Array<IInternalCollection>;
+  private items: Map<String,IInternalItem>;
 
-  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: IInternalCollection[]) {
+  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: IInternalCollection[], items: Map<String,IInternalItem>) {
     this.rpc = rpc;
     if (!this.rpc) {
       throw new Error("rpc must be set");
@@ -30,6 +31,7 @@ export class GuidedDevelopment {
     this.rpc.registerMethod({ func: this.performAction, thisArg: this });
 
     this.collections = collections;
+    this.items = items;
     this.messages = messages;
   }
 
@@ -56,9 +58,16 @@ export class GuidedDevelopment {
     // TODO - console log: item does not exist
   }
 
-  private async performAction(itemFqid: string) {
+  private getCollection(id: string): IInternalCollection {
+    const collection = this.collections.find((value) => {
+      return value.id === id;
+    });
+    return collection;
+  }
+
+  private async performAction(itemFqid: string, index: number) {
     const item: IInternalItem = this.getItem(itemFqid);
-    this.appEvents.performAction(item);
+    this.appEvents.performAction(item, index);
   }
 
   private async getState() {

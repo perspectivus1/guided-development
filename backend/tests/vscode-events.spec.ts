@@ -4,6 +4,7 @@ import * as sinon from "sinon";
 import * as _ from "lodash";
 import * as vscode from "vscode";
 import { VSCodeEvents as VSCodeEvents } from "../src/vscode-events";
+import { ActionType } from '../src/types/GuidedDev';
 
 describe('vscode-events unit test', () => {
     let events: VSCodeEvents;
@@ -21,13 +22,11 @@ describe('vscode-events unit test', () => {
                 fsPath: path
             };
         });
+        _.set(vscode, "commands.executeCommand", (): any => undefined);
         _.set(vscode, "window.showInformationMessage", () => {return Promise.resolve("");});
         _.set(vscode, "window.showErrorMessage", () => {return Promise.resolve("");});
         _.set(vscode, "workspace.workspaceFolders", []);
         _.set(vscode, "workspace.updateWorkspaceFolders", (): any => undefined);
-        _.set(vscode, "workspace.applyEdit", (): any => undefined);
-        _.set(vscode, "commands.executeCommand", (): any => undefined);
-        _.set(vscode, "WorkspaceEdit", {});
     });
 
     after(() => {
@@ -51,22 +50,26 @@ describe('vscode-events unit test', () => {
 
     describe("performAction", () => {
         it("on success", () => {
-            eventsMock.expects("doClose");
-            windowMock.expects("showInformationMessage").
-                withExactArgs('success message').resolves();
+            commandsMock.expects("executeCommand").
+                withExactArgs('workbench.action.openGlobalSettings', undefined).resolves();
             const item = {
-                id: "1",
-                title: "item1",
-                description: "item1 desc",
-                actionName: "perform",
-                actionType: "execute",
-                performAction: () => {
-                    console.log("hello")
-                    return Promise.resolve();
+                id: "open-command",
+                title: "Open Command  - Global Settings",
+                description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+                action1: {
+                    name: "Open",
+                    type: ActionType.Command,
+                    command: {
+                        name: "workbench.action.openGlobalSettings"
+                    },
                 },
-                labels: [{x:"y"}]
+                labels: [
+                    {"Project Name": "cap1"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap1"}
+                ]
             }
-            return events.performAction(item);
+            return events.performAction(item, 1);
         });
 
     });

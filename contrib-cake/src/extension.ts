@@ -5,7 +5,6 @@ import * as path from 'path';
 import * as _ from 'lodash';
 import { dir } from 'console';
 
-
 const datauri = require("datauri");
 
 const EXT_ID = "saposs.contrib-cake";
@@ -44,10 +43,10 @@ function cloneItems(items: Array<IItem>): Array<IItem> {
     const clonedItems: Array<IItem> = JSON.parse(JSON.stringify(items, replacer));
     for (const item of clonedItems) {
         const origItem: IItem | undefined = items.find(value => value.id === item.id);
-        for (const prop in item.action) {
-            if ((item.action as any)[prop] === "__Function") {
+        for (const prop in item.action1) {
+            if ((item.action1 as any)[prop] === "__Function") {
                 if (origItem) {
-                    (item.action as any)[prop] = ((origItem.action as any)[prop] as Function).bind(item);
+                    (item.action1 as any)[prop] = ((origItem.action1 as any)[prop] as Function).bind(item);
                 }
             }
         }
@@ -115,7 +114,7 @@ function getInitialItems(): Array<IItem> {
         title: "Eat Cake",
         description: "Bon appetite",
         image: getImage(path.join(extensionPath, 'resources', 'cake1.jpg')),
-        action: {
+        action1: {
             name: "Eat",
             type: ActionType.Execute,
             performAction: () => {
@@ -132,7 +131,7 @@ function getInitialItems(): Array<IItem> {
         id: "buy-ingredients",
         title: "Buy Ingredients",
         description: "Buy relevant ingredeients for your cake",
-        action: {
+        action1: {
             name: "Buy",
             type: ActionType.Execute,
             performAction: () => {
@@ -147,7 +146,7 @@ function getInitialItems(): Array<IItem> {
         id: "mix-ingredients",
         title: "Mix Ingredients",
         description: "Mix ingredeients according to recipe",
-        action: {
+        action1: {
             name: "Mix",
             type: ActionType.Execute,
             performAction: () => {
@@ -162,7 +161,7 @@ function getInitialItems(): Array<IItem> {
         id: "insert-pan",
         title: "Insert Pan into Oven",
         description: "Insert the pan into the oven",
-        action: {
+        action1: {
             name: "Insert",
             type: ActionType.Execute,
             performAction: () => {
@@ -178,7 +177,7 @@ function getInitialItems(): Array<IItem> {
         title: "Pour Mix into Pan",
         description: "Pour the cake mix into the pan",
         image: getImage(path.join(extensionPath, 'resources', 'info.png')),
-        action: {
+        action1: {
             name: "Pour",
             type: ActionType.Execute,
             performAction: () => {

@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import { describe, it, before, beforeEach, after, afterEach } from "mocha";
 import * as sinon from "sinon";
 import * as _ from "lodash";
 import { mockVscode } from "./mockUtil";
@@ -10,8 +11,8 @@ const testVscode = {
 };
 
 mockVscode(testVscode, "src/contributors.ts");
-import { Contributors } from "../src/contributors";
-import { IItem } from "../src/types/GuidedDev";
+import { Contributors } from "../../contributors";
+import { IItem } from "../../types/GuidedDev";
 
 describe('Contributors unit test', () => {
     let sandbox: any;

@@ -1,17 +1,17 @@
-import * as mocha from "mocha";
+import { describe, it, before, beforeEach, after, afterEach } from "mocha";
 import * as sinon from "sinon";
 const datauri = require("datauri"); // eslint-disable-line @typescript-eslint/no-var-requires
 import * as fsextra from "fs-extra";
 import { expect } from "chai";
 import * as _ from "lodash";
-import { GuidedDevelopment } from "../src/guided-development";
-import { AppLog } from "../src/app-log";
-import { AppEvents } from '../src/app-events';
+import { GuidedDevelopment } from "../../guided-development";
+import { AppLog } from "../../app-log";
+import { AppEvents } from '../../app-events';
 import { IMethod, IPromiseCallbacks, IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { fail } from "assert";
-import { IItem, ICollection, CollectionType } from "../src/types/GuidedDev";
-import { IInternalCollection, IInternalItem } from "./Collection";
+import { IItem, ICollection, CollectionType } from "../../types/GuidedDev";
+import { IInternalCollection, IInternalItem } from "../../Collection";
 
 describe('guidedDevelopment unit test', () => {
     let sandbox: any;

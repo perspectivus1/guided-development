@@ -1,9 +1,9 @@
-import * as mocha from "mocha";
+import { describe, it, before, beforeEach, after, afterEach } from "mocha";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import * as _ from "lodash";
 import { mockVscode } from "./mockUtil";
-import { Contributors } from "../src/contributors"
+import { Contributors } from "../../contributors"
 
 const oRegisteredCommands = {};
 const testVscode = {
@@ -19,8 +19,8 @@ const testVscode = {
     }
 };
 mockVscode(testVscode, "src/extension.ts");
-import * as extension from "../src/extension";
-import * as loggerWrapper from "../src/logger/logger-wrapper";
+import * as extension from "../../extension";
+import * as loggerWrapper from "../../logger/logger-wrapper";
 
 describe('extension unit test', () => {
     let sandbox: any;

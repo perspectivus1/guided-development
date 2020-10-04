@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
-import * as mocha from "mocha";
+import { describe, it, before, beforeEach, after, afterEach } from "mocha";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import * as _ from "lodash";
 import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ISnippet, ICommand, IFile, ActionType } from "@sap-devx/bas-platform-types/out/src/api";
 
-import { VSCodeEvents } from "../src/vscode-events";
+import { VSCodeEvents } from "../../vscode-events";
 
 function mockPerformAction(action: IAction, options?: any): void {
     if (action) {
